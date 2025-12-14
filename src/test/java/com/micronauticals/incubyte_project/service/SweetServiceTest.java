@@ -61,5 +61,25 @@ class SweetServiceTest {
         assertEquals("Gummy Bears", sweet.getName());
     }
 
+    @Test
+    void testSweetQuantityUpdate() {
+        Sweet sweet = new Sweet();
+        sweet.setQuantity(50);
+        assertEquals(50, sweet.getQuantity());
+
+        sweet.setQuantity(sweet.getQuantity() - 10);
+        assertEquals(40, sweet.getQuantity());
+    }
+
+    @Test
+    void testSweetPriceUpdate() {
+        Sweet sweet = new Sweet();
+        sweet.setPrice(1.99);
+        assertEquals(1.99, sweet.getPrice());
+
+        sweet.setPrice(2.49);
+        assertEquals(2.49, sweet.getPrice());
+    }
+
 
 }
