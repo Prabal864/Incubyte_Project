@@ -22,4 +22,13 @@ public class SweetService {
                 .orElseThrow(() -> new RuntimeException("Sweet not found with id: " + id));
     }
 
+    public Sweet updateSweet(Long id, Sweet sweetDetails) {
+        Sweet sweet = getSweetById(id);
+        sweet.setName(sweetDetails.getName());
+        sweet.setCategory(sweetDetails.getCategory());
+        sweet.setPrice(sweetDetails.getPrice());
+        sweet.setQuantity(sweetDetails.getQuantity());
+        return sweetRepository.save(sweet);
+    }
+
 }
