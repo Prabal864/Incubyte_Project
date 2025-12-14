@@ -218,7 +218,6 @@ Example `application.properties` configuration (simplified and with placeholders
 The backend includes comprehensive unit tests following TDD principles:
 
 ```bash
-cd backend
 mvn test
 ```
 
@@ -334,4 +333,5 @@ My typical workflow became:
 AI tools like GitHub Copilot have become an invaluable part of my development toolkit. They don't replace the need for understanding and critical thinking, but they significantly enhance productivity and code quality when used effectively. The key is to view AI as a collaborative tool that augments human creativity and problem-solving rather than a replacement for developer skills.
 
 **Transparency Note:** All commits in this project include co-authorship attribution to acknowledge AI assistance, as per the project requirements.
+
 
