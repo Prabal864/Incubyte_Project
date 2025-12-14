@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -52,34 +53,100 @@ class SweetServiceTest {
     }
 
     @Test
-    void testSweetWithId() {
-        Sweet sweet = new Sweet();
-        sweet.setId(1L);
-        sweet.setName("Gummy Bears");
+    void testGetAllSweets() {
+        List<Sweet> sweets = Arrays.asList(testSweet);
+        when(sweetRepository.findAll()).thenReturn(sweets);
 
-        assertEquals(1L, sweet.getId());
-        assertEquals("Gummy Bears", sweet.getName());
+        List<Sweet> result = sweetService.getAllSweets();
+
+        assertEquals(1, result.size());
+        assertEquals("Chocolate Bar", result.get(0).getName());
     }
 
     @Test
-    void testSweetQuantityUpdate() {
-        Sweet sweet = new Sweet();
-        sweet.setQuantity(50);
-        assertEquals(50, sweet.getQuantity());
+    void testGetSweetById() {
+        when(sweetRepository.findById(anyLong())).thenReturn(Optional.of(testSweet));
 
-        sweet.setQuantity(sweet.getQuantity() - 10);
-        assertEquals(40, sweet.getQuantity());
+        Sweet found = sweetService.getSweetById(1L);
+
+        assertNotNull(found);
+        assertEquals("Chocolate Bar", found.getName());
     }
 
     @Test
-    void testSweetPriceUpdate() {
-        Sweet sweet = new Sweet();
-        sweet.setPrice(1.99);
-        assertEquals(1.99, sweet.getPrice());
+    void testGetSweetById_NotFound() {
+        when(sweetRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        sweet.setPrice(2.49);
-        assertEquals(2.49, sweet.getPrice());
+        assertThrows(RuntimeException.class, () -> sweetService.getSweetById(1L));
     }
 
+    @Test
+    void testUpdateSweet() {
+        Sweet updatedSweet = new Sweet();
+        updatedSweet.setName("Updated Chocolate");
+        updatedSweet.setCategory("Chocolate");
+        updatedSweet.setPrice(3.00);
+        updatedSweet.setQuantity(150);
 
+        when(sweetRepository.findById(anyLong())).thenReturn(Optional.of(testSweet));
+        when(sweetRepository.save(any(Sweet.class))).thenReturn(updatedSweet);
+
+        Sweet result = sweetService.updateSweet(1L, updatedSweet);
+
+        assertNotNull(result);
+        assertEquals("Updated Chocolate", result.getName());
+        assertEquals(3.00, result.getPrice());
+    }
+
+    @Test
+    void testDeleteSweet() {
+        when(sweetRepository.findById(anyLong())).thenReturn(Optional.of(testSweet));
+        doNothing().when(sweetRepository).deleteById(anyLong());
+
+        sweetService.deleteSweet(1L);
+
+        verify(sweetRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testPurchaseSweet() {
+        when(sweetRepository.findById(anyLong())).thenReturn(Optional.of(testSweet));
+        when(sweetRepository.save(any(Sweet.class))).thenReturn(testSweet);
+
+        Sweet result = sweetService.purchaseSweet(1L, 10);
+
+        assertNotNull(result);
+        assertEquals(90, result.getQuantity());
+        verify(sweetRepository, times(1)).save(testSweet);
+    }
+
+    @Test
+    void testPurchaseSweet_InsufficientQuantity() {
+        when(sweetRepository.findById(anyLong())).thenReturn(Optional.of(testSweet));
+
+        assertThrows(RuntimeException.class, () -> sweetService.purchaseSweet(1L, 200));
+    }
+
+    @Test
+    void testRestockSweet() {
+        when(sweetRepository.findById(anyLong())).thenReturn(Optional.of(testSweet));
+        when(sweetRepository.save(any(Sweet.class))).thenReturn(testSweet);
+
+        Sweet result = sweetService.restockSweet(1L, 50);
+
+        assertNotNull(result);
+        assertEquals(150, result.getQuantity());
+        verify(sweetRepository, times(1)).save(testSweet);
+    }
+
+    @Test
+    void testSearchSweets() {
+        List<Sweet> sweets = Arrays.asList(testSweet);
+        when(sweetRepository.searchSweets(any(), any(), any(), any())).thenReturn(sweets);
+
+        List<Sweet> result = sweetService.searchSweets("Chocolate", null, null, null);
+
+        assertEquals(1, result.size());
+        assertEquals("Chocolate Bar", result.get(0).getName());
+    }
 }

@@ -6,6 +6,8 @@ import com.micronauticals.incubyte_project.repository.SweetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class SweetService {
@@ -15,6 +17,10 @@ public class SweetService {
 
     public Sweet createSweet(Sweet sweet) {
         return sweetRepository.save(sweet);
+    }
+
+    public List<Sweet> getAllSweets() {
+        return sweetRepository.findAll();
     }
 
     public Sweet getSweetById(Long id) {
@@ -31,4 +37,27 @@ public class SweetService {
         return sweetRepository.save(sweet);
     }
 
+    public void deleteSweet(Long id) {
+        Sweet sweet = getSweetById(id);
+        sweetRepository.deleteById(id);
+    }
+
+    public Sweet purchaseSweet(Long id, Integer quantity) {
+        Sweet sweet = getSweetById(id);
+        if (sweet.getQuantity() < quantity) {
+            throw new RuntimeException("Insufficient quantity available");
+        }
+        sweet.setQuantity(sweet.getQuantity() - quantity);
+        return sweetRepository.save(sweet);
+    }
+
+    public Sweet restockSweet(Long id, Integer quantity) {
+        Sweet sweet = getSweetById(id);
+        sweet.setQuantity(sweet.getQuantity() + quantity);
+        return sweetRepository.save(sweet);
+    }
+
+    public List<Sweet> searchSweets(String name, String category, Double minPrice, Double maxPrice) {
+        return sweetRepository.searchSweets(name, category, minPrice, maxPrice);
+    }
 }
