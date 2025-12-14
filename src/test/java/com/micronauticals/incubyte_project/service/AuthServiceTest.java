@@ -12,7 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -84,6 +87,21 @@ class AuthServiceTest {
 
         assertThrows(RuntimeException.class, () -> authService.register(registerRequest));
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void testLogin_Success() {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(null);
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(testUser));
+        when(jwtUtil.generateToken(anyString(), anyString())).thenReturn("jwt-token");
+
+        AuthResponse response = authService.login(authRequest);
+
+        assertNotNull(response);
+        assertEquals("jwt-token", response.getToken());
+        assertEquals("testuser", response.getUsername());
+        assertEquals("USER", response.getRole());
     }
 
 
