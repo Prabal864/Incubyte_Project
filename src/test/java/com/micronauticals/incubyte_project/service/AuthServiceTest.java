@@ -104,5 +104,14 @@ class AuthServiceTest {
         assertEquals("USER", response.getRole());
     }
 
+    @Test
+    void testLogin_UserNotFound() {
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn(null);
+        when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> authService.login(authRequest));
+    }
+
 
 }
