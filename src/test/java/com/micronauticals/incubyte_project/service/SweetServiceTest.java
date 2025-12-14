@@ -1,6 +1,8 @@
 package com.micronauticals.incubyte_project.service;
 
 
+import com.micronauticals.incubyte_project.model.Sweet;
+import com.micronauticals.incubyte_project.repository.SweetRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +49,16 @@ class SweetServiceTest {
         assertNotNull(created);
         assertEquals("Chocolate Bar", created.getName());
         verify(sweetRepository, times(1)).save(testSweet);
+    }
+
+    @Test
+    void testSweetWithId() {
+        Sweet sweet = new Sweet();
+        sweet.setId(1L);
+        sweet.setName("Gummy Bears");
+
+        assertEquals(1L, sweet.getId());
+        assertEquals("Gummy Bears", sweet.getName());
     }
 
 
