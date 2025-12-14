@@ -5,6 +5,7 @@ import com.micronauticals.incubyte_project.dto.AuthResponse;
 import com.micronauticals.incubyte_project.dto.RegisterRequest;
 import com.micronauticals.incubyte_project.model.User;
 import com.micronauticals.incubyte_project.repository.UserRepository;
+import com.micronauticals.incubyte_project.security.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
