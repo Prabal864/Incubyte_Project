@@ -17,5 +17,9 @@ public class SweetService {
         return sweetRepository.save(sweet);
     }
 
+    public Sweet getSweetById(Long id) {
+        return sweetRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Sweet not found with id: " + id));
+    }
 
 }
