@@ -6,7 +6,7 @@
 
 Frontend: Hosted on Netlify
 
-Backend: Hosted on Render.com
+Backend: Hosted on Droplet in DigitalOcean
 
 🔗 The frontend communicates securely with the backend via REST APIs using JWT authentication.
 
