@@ -6,7 +6,6 @@ import com.micronauticals.incubyte_project.dto.AuthResponse;
 import com.micronauticals.incubyte_project.dto.RegisterRequest;
 import com.micronauticals.incubyte_project.service.AuthService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"})
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+
+    private final AuthService authService;
+    public AuthController(AuthService authService){
+        this.authService = authService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
